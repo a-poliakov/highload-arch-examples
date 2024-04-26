@@ -1,0 +1,14 @@
+/.idea/
+/balancing_l4/db/apache-jmeter-5.6.3/
+/balancing_l4/db/infra/
+/fs/.idea/
+/fs/hive/hdfs/
+/fs/hive/metastore-postgresql/
+/**/*.iml
+/**/**/*.iml
+/**/.idea/
+/**/**/.idea/
+/mq/kafka/apache-kafka-2/apache-kafka-2.iml
+/target/
+/**/target/
+/**/**/target/
