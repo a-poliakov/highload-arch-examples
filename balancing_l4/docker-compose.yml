@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  haproxy:
+    image: haproxy:2.4
+    container_name: haproxy-lb
+    restart: "no"
+    networks:
+      - otus-haproxy-demo
+    volumes:
+      - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+    ports:
+      - "4080:80"
+      - "8404:8404"
+
+  backend-1:
+    image: nginxdemos/nginx-hello
+    container_name: haproxy-backend-1
+    restart: "no"
+    networks:
+      - otus-haproxy-demo
+
+  backend-2:
+    image: nginxdemos/nginx-hello
+    container_name: haproxy-backend-2
+    restart: "no"
+    networks:
+      - otus-haproxy-demo
+
+networks:
+  otus-haproxy-demo:

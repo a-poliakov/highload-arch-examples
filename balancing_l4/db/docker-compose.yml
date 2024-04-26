@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  postgresql-master:
+    image: 'docker.io/bitnami/postgresql:11-debian-10'
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_master_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+      - POSTGRESQL_LOG_HOSTNAME=true
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=repl_user
+      - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_DATABASE=my_database
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  postgresql-slave:
+      image: 'docker.io/bitnami/postgresql:11-debian-10'
+      ports:
+        - '5433:5432'
+      depends_on:
+        - postgresql-master
+      environment:
+        - POSTGRESQL_USERNAME=postgres
+        - POSTGRESQL_PASSWORD=my_password
+        - POSTGRESQL_MASTER_HOST=postgresql-master
+        - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+        - POSTGRESQL_LOG_HOSTNAME=true
+        - POSTGRESQL_REPLICATION_MODE=slave
+        - POSTGRESQL_REPLICATION_USER=repl_user
+        - POSTGRESQL_REPLICATION_PASSWORD=repl_password
+        - POSTGRESQL_MASTER_PORT_NUMBER=5432
+
+  haproxy-lb:
+    image: haproxy:2.4
+    container_name: haproxy-lb
+    restart: "no"
+    volumes:
+      - "./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+    ports:
+      - "5002:5002"
+      - "7002:7002"
+    depends_on:
+      - postgresql-master
+      - postgresql-slave
+
+volumes:
+  postgresql_master_data:
