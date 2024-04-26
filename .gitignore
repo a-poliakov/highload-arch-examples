@@ -12,3 +12,7 @@
 /target/
 /**/target/
 /**/**/target/
+/sharding/mongodb/images/
+/sharding/mongodb/client/
+/sharding/mongodb/with-keyfile-auth/
+/sharding/mongodb/PSA/
